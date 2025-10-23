@@ -1,0 +1,23 @@
+name: Deploy to private hosting
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Build project
+        run: npm run build
+        
+      - name: Deploy to private server
+        uses: appleboy/scp-action@v0.1.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          source: "build/*"
+          target: "/var/www/html"
